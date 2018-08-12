@@ -36,7 +36,7 @@ library(DT)           # To show tables
 Data often need to be prepared. Here I just select 100 random samples. 
 ```{r}
 # Load dataset from github
-data <- read.table("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv", header=T, sep=",") %>% dplyr::select(GrLivArea, SalePrice)
+data <- read.table("DATA/data.csv", header=T, sep=",") %>% dplyr::select(GrLivArea, SalePrice)
 
 # Keep a few lines
 data <- data %>% sample_n(100)
