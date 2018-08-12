@@ -1,0 +1,74 @@
+---
+title: "Relationship between price apartments and ground living area. "
+author: "[Yan Holtz](https://github.com/holtzy)"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+mail: "yan.holtz.data@gmail.com"
+linkedin: "yan-holtz-2477534a"
+twitter: "r_graph_gallery"
+github: "holtzy"
+output:
+  epuRate::epurate:
+    toc: FALSE
+    code_folding: "show"
+---
+
+
+<br><br>
+
+> This document is a short analysis of the relationship between price apartments and ground living area. It is associated with this publication. This work is hosted in in this github repository.
+
+
+# Libraries
+***
+See the code for a list of necessary libraries.
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(rmarkdown)    # You need this library to run this template.
+library(epuRate)      # Install with devtools: install_github("holtzy/epuRate", force=TRUE)
+library(plotly)       # Turn your ggplot2 interactive
+library(hrbrthemes)   # For good looking plots
+library(DT)           # To show tables
+```
+
+
+# Data preprocessing
+***
+Data often need to be prepared. Here I just select 100 random samples. 
+```{r}
+# Load dataset from github
+data <- read.table("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv", header=T, sep=",") %>% dplyr::select(GrLivArea, SalePrice)
+
+# Keep a few lines
+data <- data %>% sample_n(100)
+```
+
+
+# Analysis
+***
+Here is a description of the relationship between prices and ground living area:
+```{r, warning=FALSE}
+# Plot
+p <- data %>% 
+  mutate(text=paste("Apartment Number: ", seq(1:nrow(data)), "\nLocation: New York\nAny info you need..", sep="")) %>%
+  ggplot( aes(x=GrLivArea, y=SalePrice/1000, text=text)) +
+    geom_point(color="#69b3a2", alpha=0.8) +
+    ggtitle("Ground living area partially explains sale price of apartments") +
+    theme_ipsum() +
+    theme(
+      plot.title = element_text(size=12)
+    ) +
+    ylab('Sale price (k$)') +
+    xlab('Ground living area')
+
+# Turn it interactive
+ggplotly(p, tooltip="text")
+```
+
+
+
+#Show raw data
+***
+In case your interested about a particular data point, here is the complete input dataset:
+```{r, echo=FALSE}
+datatable(data, rownames = FALSE, filter="top", options = list(pageLength = 5, scrollX=T) )
+```
